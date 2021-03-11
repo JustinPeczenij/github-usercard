@@ -46,16 +46,16 @@ const followersArray = [
 ];
 
 
-    followersArray.forEach(username => {
-      let newUser = `https://api.github.com/users/${username}`
-      axios
-      .get(newUser)
-      .then((response) => {
-        const card = userMaker(response.data)
-        cards.appendChild(card)
-      })
-      .catch()
-    })
+followersArray.forEach(username => {
+  let newUser = `https://api.github.com/users/${username}`
+  axios
+  .get(newUser)
+  .then((response) => {
+    const card = userMaker(response.data)
+    cards.appendChild(card)
+  })
+  .catch()
+})
 
 
 
