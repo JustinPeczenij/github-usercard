@@ -1,9 +1,19 @@
+import axios from "axios";
+const cards = document.querySelector('.cards');
 /*
   STEP 1: using axios, send a GET request to the following URL
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
-
+axios
+.get('https://api.github.com/users/justinpeczenij')
+.then((response) => {
+  const card = userMaker(response.data) 
+  cards.appendChild(card)
+  console.log(card)
+})
+.catch()
+console.log(axios)
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
     github info! You will need to understand the structure of this
@@ -27,16 +37,36 @@
     Using that array, iterate over it, requesting data for each user, creating a new card for each
     user, and adding that card to the DOM.
 */
+const followersArray = [    
+  'tetondan',
+  'dustinmyers',
+  'justsml',
+  'luishrd',
+  'bigknell',
+];
 
-const followersArray = [];
+
+    followersArray.forEach(username => {
+      let newUser = `https://api.github.com/users/${username}`
+      axios
+      .get(newUser)
+      .then((response) => {
+        const card = userMaker(response.data)
+        cards.appendChild(card)
+      })
+      .catch()
+    })
+
+
+
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
     Using DOM methods and properties, create and return the following markup:
 
-    <div class="card">
-      <img src={image url of user} />
-      <div class="card-info">
+    /<div class="card">
+      /<img src={image url of user} />
+      /<div class="card-info">
         <h3 class="name">{users name}</h3>
         <p class="username">{users user name}</p>
         <p>Location: {users location}</p>
@@ -46,8 +76,8 @@ const followersArray = [];
         <p>Followers: {users followers count}</p>
         <p>Following: {users following count}</p>
         <p>Bio: {users bio}</p>
-      </div>
-    </div>
+      /</div>
+    /</div>
 */
 
 /*
@@ -58,3 +88,48 @@ const followersArray = [];
     luishrd
     bigknell
 */
+function userMaker({ avatar_url, name, login, location, url, followers, following, bio }) {
+  //create elements
+  const card = document.createElement('div');
+  const cardImg = document.createElement('img');
+  const cardInfo = document.createElement('div')
+  const cardUsersName = document.createElement('h3');
+  const cardUsername = document.createElement('p');
+  const cardLocation = document.createElement('p');
+  const cardProfile = document.createElement('p');
+  const cardAddress = document.createElement('a');
+  const cardFollowers = document.createElement('p');
+  const cardFollowing = document.createElement('p');
+  const cardBio = document.createElement('p');
+
+  // add classes, attributes, text
+  card.classList.add('card');
+  cardImg.src = avatar_url;
+  cardInfo.classList.add('card-info');
+  cardUsersName.classList.add('name');
+  cardUsersName.textContent = `${name}`;
+  cardUsername.classList.add('username');
+  cardUsername.textContent = `${login}`;
+  cardLocation.textContent = `Location: ${location}`;
+  cardAddress.href = url;
+  cardAddress.textContent = `${url}`;
+  cardProfile.textContent = 'Profile: '
+  cardFollowers.textContent = `Followers: ${followers}`;
+  cardFollowing.textContent = `Following: ${following}`;
+  cardBio.textContent = `Bio: ${bio}`;
+
+  // create hierarchy
+  card.appendChild(cardImg);
+  card.appendChild(cardInfo);
+  cardInfo.appendChild(cardUsersName);
+  cardInfo.appendChild(cardUsername);
+  cardInfo.appendChild(cardLocation);
+  cardInfo.appendChild(cardProfile);
+  cardProfile.appendChild(cardAddress);
+  cardInfo.appendChild(cardFollowers);
+  cardInfo.appendChild(cardFollowing);
+  cardInfo.appendChild(cardBio);
+
+
+  return card
+}
